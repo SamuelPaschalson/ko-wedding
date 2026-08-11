@@ -74,14 +74,15 @@ export const orderOfEvents = [
   { time: '2:45 PM', what: 'Opening prayer and welcome' },
   { time: '3:00 PM', what: 'Lunch is served' },
   { time: '4:00 PM', what: 'Toasts, first dance, cutting of the cake' },
-  { time: '5:00 PM', what: 'Cultural dance · money spray · family dances' },
+  { time: '5:00 PM', what: 'Dance dance dance' },
   { time: '6:30 PM', what: 'Vote of thanks' },
-  { time: '7:00 PM', what: 'The party proper — band and DJ till late' },
+  { time: '7:00 PM', what: 'Parte after Parte' },
 ];
 
 export const parking = {
   headline: 'Parking & arrival',
   points: [
+    'The parking space is enough for everybody, so drive in to park.',
     'Secure parking is available on-site with attendants on duty from 12:30 PM.',
     'Drop-off is at the main portico; drivers can wait in the designated driver bay.',
     'If you are riding, set your destination pin to the venue gate, not the street name.',
@@ -115,6 +116,10 @@ export const palette = {
       ],
     },
   ],
+  // Short version, shown right under the hero. Adults-only is the part
+  // guests most need to see before they start planning.
+  shortNote:
+    'This is an adults-only celebration, and access is strictly by invitation. Formal dress, please \u2014 kindly avoid white, bright colours and denim.',
   // The old "asoebi footer" note, condensed onto the landing page.
   note: 'This is an adults-only celebration, and venue access is strictly by invitation. Formal dress, please — and kindly avoid white, bright colours and denim.',
 };
@@ -127,12 +132,12 @@ export const bridalParty = [
   {
     group: 'Standing with the bride',
     people: [
-      { name: 'Kosi', role: 'Chief Bridesmaid', photo: '/images/gal-06.jpg' },
+      { name: 'Kosi', role: 'Chief Bridesmaid', photo: '/images/kosi.jpg' },
       { name: 'Princess', role: 'Bridesmaid', photo: '/images/gal-07.jpg' },
       { name: 'Joy', role: 'Bridesmaid', photo: '/images/gal-04.jpg' },
       { name: 'Oby', role: 'Bridesmaid', photo: '/images/gal-05.jpg' },
       { name: 'Golden', role: 'Bridesmaid', photo: '/images/gal-08.jpg' },
-      { name: 'Mary', role: 'Bridesmaid', photo: '/images/gal-09.jpg' },
+      { name: 'Victoria', role: 'Bridesmaid', photo: '/images/victoria.jpg' },
     ],
   },
   {
@@ -145,6 +150,7 @@ export const bridalParty = [
       },
       { name: 'Azeez Kamali', role: 'Groomsman', photo: '/images/gal-02.jpg' },
       { name: 'Olisa Egbuonu', role: 'Groomsman', photo: '/images/gal-03.jpg' },
+      { name: 'Ugonna', role: 'Groomsman', photo: '/images/ugonna.jpg' },
     ],
   },
 ];
@@ -198,20 +204,62 @@ export const gallery = {
     {
       label: 'The pre-wedding shoot',
       photos: [
-        { src: '/images/pre-01.jpg', alt: 'The couple at the pre-wedding shoot' },
-        { src: '/images/pre-02.jpg', alt: 'The couple at the pre-wedding shoot' },
-        { src: '/images/pre-03.jpg', alt: 'The couple at the pre-wedding shoot' },
-        { src: '/images/pre-04.jpg', alt: 'The couple at the pre-wedding shoot' },
-        { src: '/images/pre-05.jpg', alt: 'The couple at the pre-wedding shoot' },
-        { src: '/images/pre-06.jpg', alt: 'The couple at the pre-wedding shoot' },
-        { src: '/images/pre-07.jpg', alt: 'The couple at the pre-wedding shoot' },
-        { src: '/images/pre-08.jpg', alt: 'The couple at the pre-wedding shoot' },
-        { src: '/images/pre-09.jpg', alt: 'The couple at the pre-wedding shoot' },
-        { src: '/images/pre-10.jpg', alt: 'The couple at the pre-wedding shoot' },
-        { src: '/images/pre-11.jpg', alt: 'The couple at the pre-wedding shoot' },
-        { src: '/images/pre-12.jpg', alt: 'The couple at the pre-wedding shoot' },
-        { src: '/images/pre-13.jpg', alt: 'The couple at the pre-wedding shoot' },
-        { src: '/images/pre-14.jpg', alt: 'The couple at the pre-wedding shoot' },
+        {
+          src: '/images/pre-01.jpg',
+          alt: 'The couple at the pre-wedding shoot',
+        },
+        {
+          src: '/images/pre-02.jpg',
+          alt: 'The couple at the pre-wedding shoot',
+        },
+        {
+          src: '/images/pre-03.jpg',
+          alt: 'The couple at the pre-wedding shoot',
+        },
+        {
+          src: '/images/pre-04.jpg',
+          alt: 'The couple at the pre-wedding shoot',
+        },
+        {
+          src: '/images/pre-05.jpg',
+          alt: 'The couple at the pre-wedding shoot',
+        },
+        {
+          src: '/images/pre-06.jpg',
+          alt: 'The couple at the pre-wedding shoot',
+        },
+        {
+          src: '/images/pre-07.jpg',
+          alt: 'The couple at the pre-wedding shoot',
+        },
+        {
+          src: '/images/pre-08.jpg',
+          alt: 'The couple at the pre-wedding shoot',
+        },
+        {
+          src: '/images/pre-09.jpg',
+          alt: 'The couple at the pre-wedding shoot',
+        },
+        {
+          src: '/images/pre-10.jpg',
+          alt: 'The couple at the pre-wedding shoot',
+        },
+        {
+          src: '/images/pre-11.jpg',
+          alt: 'The couple at the pre-wedding shoot',
+        },
+        {
+          src: '/images/pre-12.jpg',
+          alt: 'The couple at the pre-wedding shoot',
+        },
+        {
+          src: '/images/pre-13.jpg',
+          alt: 'The couple at the pre-wedding shoot',
+        },
+        {
+          src: '/images/pre-14.jpg',
+          alt: 'The couple at the pre-wedding shoot',
+        },
       ],
     },
   ],
@@ -241,7 +289,7 @@ export const travel = {
     },
     {
       title: 'Small practical things',
-      body: 'Bring a light wrap for the air conditioning, carry a little cash for the spray, and save the RSVP numbers on this page before you set out. Remember: adults only, and access is strictly by invitation.',
+      body: 'Bring a light wrap for the air conditioning, and save the RSVP numbers on this page before you set out. Remember: adults only, and access is strictly by invitation.',
     },
   ],
 };
@@ -265,7 +313,7 @@ export const faqs = [
   },
   {
     q: 'Is there parking?',
-    a: 'Yes — secure on-site parking with attendants from 12:30 PM, plus a driver waiting bay.',
+    a: 'Yes — the parking space is enough for everybody, so drive in to park. Secure on-site parking with attendants from 12:30 PM, plus a driver waiting bay.',
   },
   {
     q: 'Can I take photos?',
@@ -277,7 +325,7 @@ export const faqs = [
   },
   {
     q: 'When must I RSVP by?',
-    a: 'TODO: date — please respond by then so we can confirm your seat and your plate.',
+    a: 'Kindly respond by 30 August 2026 so we can confirm your seat and your plate.',
   },
 ];
 
@@ -301,7 +349,7 @@ export const contacts = [
 /* ---------------------------------------------------------- */
 
 export const rsvp = {
-  deadline: 'TODO: 31 August 2026',
+  deadline: '30 August 2026',
   // Paste a Formspree / Getform / Google Apps Script endpoint here.
   // Leave empty and the form falls back to a pre-filled WhatsApp message.
   endpoint: '',

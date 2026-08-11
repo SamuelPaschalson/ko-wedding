@@ -85,6 +85,8 @@ export default function Home() {
               </a>
             </article>
           ))}
+
+          <p className="house-note reveal">{palette.shortNote}</p>
         </div>
       </section>
 

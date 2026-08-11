@@ -1,48 +1,34 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { playSong, pauseSong, isPlaying, onPlaybackChange } from '../lib/audio';
 
 /**
- * Muted by default — autoplay with sound is blocked by browsers and
- * rude on mobile data. The guest chooses.
+ * Floating music button. It does not own the audio any more — the envelope
+ * starts the song when the guest opens the letter, and this button simply
+ * mirrors and controls that same shared track.
  */
-export default function MusicToggle({ src = '/song.mp3' }) {
-  const audioRef = useRef(null);
-  const [playing, setPlaying] = useState(false);
+export default function MusicToggle() {
+  const [playing, setPlaying] = useState(() => isPlaying());
 
-  useEffect(() => {
-    const audio = audioRef.current;
-    if (!audio) return;
-    audio.volume = 0.35;
-  }, []);
+  useEffect(() => onPlaybackChange(setPlaying), []);
 
-  const toggle = async () => {
-    const audio = audioRef.current;
-    if (!audio) return;
+  const toggle = () => {
     if (playing) {
-      audio.pause();
-      setPlaying(false);
+      pauseSong();
     } else {
-      try {
-        await audio.play();
-        setPlaying(true);
-      } catch {
-        setPlaying(false);
-      }
+      playSong();
     }
   };
 
   return (
-    <>
-      <audio ref={audioRef} src={src} loop preload="none" />
-      <button
-        className="music"
-        data-playing={playing}
-        onClick={toggle}
-        aria-pressed={playing}
-        aria-label={playing ? 'Pause music' : 'Play music'}
-        title={playing ? 'Pause music' : 'Play music'}
-      >
-        <i aria-hidden="true" />
-      </button>
-    </>
+    <button
+      className="music"
+      data-playing={playing}
+      onClick={toggle}
+      aria-pressed={playing}
+      aria-label={playing ? 'Pause music' : 'Play music'}
+      title={playing ? 'Pause music' : 'Play music'}
+    >
+      <i aria-hidden="true" />
+    </button>
   );
 }

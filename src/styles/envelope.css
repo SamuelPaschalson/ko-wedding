@@ -1,0 +1,374 @@
+/* ================================================================
+   THE OPENING - espresso envelope, champagne flap, gold lacework
+   Uses the site's own palette (espresso / mocha / cocoa / gold / oat /
+   ivory) so the front door matches the rooms behind it.
+   ================================================================ */
+
+.env-screen {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  color: var(--ivory);
+  background: radial-gradient(120% 90% at 50% 12%, #3b2a1e 0%, var(--espresso) 48%, #180f0a 100%);
+  transition:
+    opacity 0.9s var(--ease),
+    transform 0.9s var(--ease);
+}
+
+.env-screen.is-leaving {
+  opacity: 0;
+  transform: scale(1.04);
+  pointer-events: none;
+}
+
+/* Corner lacework, in gold */
+.env-corner {
+  position: absolute;
+  width: min(340px, 58vw);
+  height: min(340px, 58vw);
+  color: rgba(176, 141, 87, 0.24);
+  pointer-events: none;
+}
+.env-corner--tl {
+  top: min(-150px, -24vw);
+  left: min(-130px, -22vw);
+}
+.env-corner--br {
+  right: min(-130px, -22vw);
+  bottom: min(-150px, -24vw);
+}
+
+.env-layout {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  height: 100%;
+  max-height: 100dvh;
+  padding: clamp(24px, 5vh, 52px) 20px clamp(18px, 3.5vh, 34px);
+  text-align: center;
+}
+
+.env-head {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.env-eyebrow {
+  font-family: var(--font-sans);
+  font-size: 10px;
+  letter-spacing: 0.44em;
+  text-transform: uppercase;
+  color: var(--taupe);
+}
+
+.env-invite {
+  font-family: var(--font-script);
+  font-size: clamp(26px, 6vw, 38px);
+  line-height: 1;
+  color: var(--ivory);
+}
+
+/* ---- Envelope ---- */
+.env-stage {
+  flex: 0 0 auto;
+  cursor: pointer;
+}
+.env-stage:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 20px;
+  border-radius: 8px;
+}
+
+.envelope {
+  position: relative;
+  width: min(430px, 86vw);
+  height: min(304px, 62vw);
+  perspective: 1200px;
+}
+
+/* The printed face, in espresso and mocha. */
+.env-face {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  overflow: hidden;
+  border: 1px solid rgba(176, 141, 87, 0.38);
+  border-radius: 3px;
+  background: linear-gradient(165deg, #402d1f 0%, #2b1e14 55%, #1a110c 100%);
+  box-shadow:
+    inset 0 1px 0 rgba(220, 205, 185, 0.12),
+    0 30px 60px rgba(20, 12, 8, 0.6);
+}
+/* Faint sheen at the top so the open envelope reads as a lined interior
+   rather than an empty box. */
+.env-face::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 58%;
+  background: linear-gradient(180deg, rgba(220, 205, 185, 0.1), rgba(220, 205, 185, 0) 100%);
+  pointer-events: none;
+}
+
+.face-lace {
+  position: absolute;
+  width: 54%;
+  height: auto;
+  /* Kept faint: it frames the names, it must never compete with them. */
+  color: rgba(176, 141, 87, 0.42);
+  pointer-events: none;
+}
+.face-lace--left {
+  left: -20%;
+  bottom: -30%;
+}
+.face-lace--right {
+  right: -20%;
+  bottom: -30%;
+}
+
+.face-text {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding-bottom: clamp(14px, 4vw, 20px);
+}
+/* Soft pool of espresso so the lacework never muddies the reading. */
+.face-text::before {
+  content: '';
+  position: absolute;
+  inset: -14px -34px -6px;
+  z-index: -1;
+  background: radial-gradient(
+    ellipse at center,
+    rgba(22, 14, 9, 0.94) 0%,
+    rgba(22, 14, 9, 0.82) 52%,
+    rgba(22, 14, 9, 0) 100%
+  );
+}
+
+.face-names {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  font-family: var(--font-script);
+  font-weight: 400;
+  font-size: clamp(24px, 6vw, 32px);
+  line-height: 1.1;
+  color: var(--paper);
+}
+.face-names em {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  color: var(--taupe);
+}
+
+.face-rule {
+  width: 92px;
+  height: 1px;
+  margin: 8px 0 7px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+}
+
+.face-date {
+  font-family: var(--font-sans);
+  font-size: 11px;
+  letter-spacing: 0.42em;
+  text-transform: uppercase;
+  color: var(--oat);
+}
+.face-venue {
+  margin-top: 6px;
+  font-family: var(--font-sans);
+  font-size: 9px;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--taupe);
+}
+
+/* ---- Flap, in champagne ---- */
+.env-flap {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 3;
+  width: 100%;
+  height: 54%;
+  transform-origin: top center;
+  transform: rotateX(0deg);
+  transform-style: preserve-3d;
+  transition: transform 1.25s var(--ease);
+}
+.envelope.is-open .env-flap {
+  transform: rotateX(-176deg);
+  z-index: 1;
+}
+
+.env-flap-inner {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 100%;
+  clip-path: polygon(0 0, 100% 0, 50% 100%);
+  background: linear-gradient(180deg, var(--ivory) 0%, var(--oat) 46%, #c2a888 100%);
+  box-shadow: 0 12px 26px rgba(20, 12, 8, 0.45);
+  /* WHY no backface-visibility:hidden - once the flap folds back we want to
+     see its reverse standing open above the envelope, not have it vanish. */
+}
+
+.flap-lace {
+  width: 46%;
+  height: auto;
+  margin-bottom: 16%;
+  color: rgba(110, 74, 46, 0.38);
+}
+
+/* ---- Seal, in cocoa and gold ---- */
+.env-seal {
+  position: absolute;
+  /* Rides the point of the flap, clear of the names below. */
+  top: 54%;
+  left: 50%;
+  z-index: 4;
+  display: grid;
+  place-items: center;
+  width: 62px;
+  height: 62px;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: radial-gradient(circle at 34% 30%, #d8b476 0%, var(--gold) 30%, var(--cocoa) 62%, #5d3512 100%);
+  box-shadow:
+    0 8px 18px rgba(20, 12, 8, 0.55),
+    inset 0 2px 5px rgba(255, 255, 255, 0.28),
+    inset 0 -3px 7px rgba(0, 0, 0, 0.4);
+  transition:
+    transform 0.7s var(--ease),
+    opacity 0.7s var(--ease);
+}
+.env-stage:hover .env-seal {
+  transform: translate(-50%, -50%) scale(1.07);
+}
+.env-seal.is-broken {
+  opacity: 0;
+  transform: translate(-50%, 26px) scale(0.8) rotate(-14deg);
+}
+
+.env-seal-inner {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border: 1px solid rgba(243, 235, 223, 0.42);
+  border-radius: 50%;
+  font-family: var(--font-display);
+  font-size: 14px;
+  letter-spacing: 0.08em;
+  color: var(--ivory);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+/* ---- Footer ---- */
+.env-foot {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.env-hint {
+  font-family: var(--font-sans);
+  font-size: 10px;
+  letter-spacing: 0.34em;
+  text-transform: uppercase;
+  color: var(--oat);
+  animation: envHint 3s ease-in-out infinite;
+}
+@keyframes envHint {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.42;
+  }
+}
+
+.env-skip {
+  background: none;
+  border: 0;
+  padding: 6px 4px;
+  cursor: pointer;
+  font-family: var(--font-sans);
+  font-size: 10px;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--taupe);
+  text-decoration: underline;
+  text-underline-offset: 5px;
+}
+.env-skip:hover {
+  color: var(--ivory);
+}
+
+/* Phones: the envelope gets proportionally taller and the seal smaller, so
+   the seal never crowds the names. */
+@media (max-width: 560px) {
+  .envelope {
+    width: min(430px, 88vw);
+    height: min(304px, 68vw);
+  }
+  .env-flap {
+    height: 50%;
+  }
+  .env-seal {
+    top: 50%;
+    width: 52px;
+    height: 52px;
+  }
+  .env-seal-inner {
+    width: 37px;
+    height: 37px;
+    font-size: 12px;
+  }
+}
+
+@media (max-height: 640px) {
+  .env-invite {
+    font-size: 24px;
+  }
+  .envelope {
+    width: min(340px, 76vw);
+    height: min(232px, 52vw);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .env-flap,
+  .env-seal,
+  .env-screen {
+    transition-duration: 0.01ms;
+  }
+  .env-hint {
+    animation: none;
+  }
+}

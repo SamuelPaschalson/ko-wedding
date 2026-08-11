@@ -14,6 +14,7 @@ import '@fontsource/old-standard-tt/400-italic.css';
 
 import App from './App';
 import './styles/index.css';
+import './styles/envelope.css';
 
 createRoot(document.getElementById('root')).render(
   <React.StrictMode>

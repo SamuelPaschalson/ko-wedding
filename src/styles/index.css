@@ -176,6 +176,23 @@ h4 {
   background: var(--espresso);
   color: var(--oat);
 }
+
+/* House rules line under the ceremony/reception cards: adults only, dress
+   code. Spans the full width of the two-column card grid. */
+.house-note {
+  grid-column: 1 / -1;
+  max-width: 46em;
+  margin: clamp(14px, 2.5vw, 24px) auto 0;
+  padding-top: clamp(22px, 3.5vw, 30px);
+  border-top: 1px solid rgba(163, 143, 121, 0.32);
+  font-family: var(--font-sans);
+  font-size: clamp(13px, 1.6vw, 15px);
+  font-weight: 300;
+  line-height: 1.75;
+  letter-spacing: 0.02em;
+  text-align: center;
+  color: var(--ink-soft);
+}
 .section--espresso h2,
 .section--espresso h3 {
   color: var(--ivory);
@@ -1389,22 +1406,21 @@ h4 {
    ══════════════════════════════════════════════════════════════════ */
 
 @media (max-width: 820px) {
-  /* HERO — stacked instead of full-bleed.
-     The photograph sits on top at its true 4:5 ratio (so neither the bride
-     nor the groom is cropped or veiled), and the words sit underneath on
-     solid ivory — flat background means the type renders perfectly sharp. */
+  /* HERO - full-bleed on phones too, matching desktop: the words sit ON the
+     photograph rather than underneath it. The tall 4:5 crop is used so the
+     couple is framed properly in portrait. */
   .hero--photo {
-    min-height: 0;
+    min-height: 100svh;
     grid-template-columns: 1fr;
     justify-items: center;
-    padding: 86px 0 46px;
-    background: linear-gradient(180deg, var(--ivory) 0%, #ece1cd 72%, var(--oat) 100%);
+    padding: 96px var(--gutter) 72px;
+    background: none;
   }
   .hero--photo .hero-plate {
-    position: relative;
-    inset: auto;
-    width: 100%;
-    aspect-ratio: 4 / 5;
+    position: absolute;
+    inset: 0;
+    width: auto;
+    aspect-ratio: auto;
   }
   .hero-half--wide {
     display: none;
@@ -1416,26 +1432,30 @@ h4 {
     animation: none;
     filter: sepia(0.12) saturate(0.94) brightness(1.01);
   }
-  /* Just a whisper of ivory at the very bottom edge so the photograph melts
-     into the section below. Faces stay completely clear. */
+  /* Champagne wash over the photograph, a touch stronger than desktop because
+     the type is larger and sits across more of the frame on a phone. */
   .hero--photo .hero-plate::after {
-    background: linear-gradient(
-      180deg,
-      transparent 58%,
-      rgba(243, 235, 223, 0.5) 84%,
-      var(--ivory) 100%
-    );
+    background:
+      radial-gradient(
+        ellipse 92% 62% at 50% 52%,
+        rgba(247, 241, 231, 0.62) 0%,
+        rgba(243, 235, 223, 0.48) 44%,
+        rgba(224, 210, 190, 0.34) 72%,
+        rgba(36, 26, 21, 0.46) 100%
+      ),
+      linear-gradient(180deg, rgba(36, 26, 21, 0.24) 0%, transparent 26%);
   }
   .hero--photo .hero-inner {
     max-width: none;
-    padding: 24px var(--gutter) 0;
+    padding: 0;
   }
-  /* The halo is only needed when type sits over the photo. */
+  /* Keep the halo: the type is over the photograph here as well. */
   .hero--photo .hero-inner::before {
-    display: none;
+    display: block;
+    inset: -6% -8%;
   }
   .hero--photo .hero-names {
-    font-size: clamp(54px, 15.5vw, 96px);
+    font-size: clamp(46px, 13.5vw, 84px);
   }
   .hero--photo .hero-meta {
     gap: 6px 12px;
@@ -1449,10 +1469,9 @@ h4 {
     margin-top: 20px;
     font-size: 15.5px;
   }
-  /* "Scroll" is pinned to the viewport bottom, which makes no sense once the
-     hero is a normal stacked block. */
+  /* Full-bleed again, so the scroll cue belongs back at the bottom edge. */
   .hero--photo .hero-scroll {
-    display: none;
+    display: flex;
   }
 }
 

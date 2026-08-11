@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import Envelope from './components/Envelope';
 import Nav from './components/Nav';
 import Footer from './components/Footer';
 import MusicToggle from './components/MusicToggle';
@@ -8,6 +9,36 @@ import { couple } from './data/site';
 
 export default function App() {
   const [hash, setHash] = useState(() => window.location.hash || '#/');
+
+  // WHY: the envelope is a welcome, not a toll gate. Once a guest has opened
+  // it we remember that for the tab, so a refresh or a shared deep link does
+  // not make them break the seal all over again.
+  const [envelopeOpen, setEnvelopeOpen] = useState(() => {
+    try {
+      if (sessionStorage.getItem('ko-envelope-opened') === '1') return true;
+    } catch {
+      /* private mode — fall through and just show the envelope */
+    }
+    // Deep links into an inner page skip the envelope entirely.
+    return (window.location.hash || '#/') !== '#/';
+  });
+
+  const openEnvelope = () => {
+    try {
+      sessionStorage.setItem('ko-envelope-opened', '1');
+    } catch {
+      /* ignore */
+    }
+    setEnvelopeOpen(true);
+  };
+
+  // Lock the page behind the envelope so nothing scrolls underneath it.
+  useEffect(() => {
+    document.body.style.overflow = envelopeOpen ? '' : 'hidden';
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [envelopeOpen]);
 
   useEffect(() => {
     const onHashChange = () => {
@@ -30,7 +61,15 @@ export default function App() {
         : `${route.title} · ${couple.bride} & ${couple.groom}`;
   }, [route]);
 
-  useReveal(route.path);
+  // WHY the envelope is part of the key: while the envelope is up, the site
+  // markup does not exist yet, so the observer finds nothing to watch and every
+  // .reveal block stays invisible. Re-running once the envelope opens is what
+  // actually brings the home page content in.
+  useReveal(`${route.path}|${envelopeOpen}`);
+
+  if (!envelopeOpen) {
+    return <Envelope onOpen={openEnvelope} />;
+  }
 
   return (
     <>
