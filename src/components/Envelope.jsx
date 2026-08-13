@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
-import { couple, dateLabel, events } from '../data/site';
+import { couple, dateLabel } from '../data/site';
 import { playSong } from '../lib/audio';
-import Mandala from './Mandala';
 
 /**
- * The front door of the site: a black, silver-laced envelope whose flap folds
- * open to reveal the invitation.
+ * The front door of the site: an aged parchment envelope, sealed with oxblood
+ * wax and stamped with the KO monogram, styled to match the printed Save the
+ * Date. The flap folds open to reveal the invitation.
  *
- * The song starts on the same click that breaks the seal — browsers only allow
+ * The song starts on the same click that breaks the seal - browsers only allow
  * audio to begin inside a real user gesture.
  */
 export default function Envelope({ onOpen }) {
@@ -28,14 +28,13 @@ export default function Envelope({ onOpen }) {
 
   return (
     <div className={`env-screen ${leaving ? 'is-leaving' : ''}`}>
-      {/* Corner lacework, echoing the printed suite */}
-      <Mandala className="env-corner env-corner--tl" />
-      <Mandala className="env-corner env-corner--br" />
-
       <div className="env-layout">
         <header className="env-head">
-          <p className="env-eyebrow">Together with their families</p>
-          <p className="env-invite">You are invited</p>
+          <p className="env-invite">Save the Date</p>
+          <p className="env-eyebrow">
+            Some moments are too precious to celebrate without the people who
+            matter most.
+          </p>
         </header>
 
         <div
@@ -52,39 +51,50 @@ export default function Envelope({ onOpen }) {
           }}
         >
           <div className={`envelope ${opened ? 'is-open' : ''}`}>
-            {/* The printed face of the envelope */}
+            {/* The printed parchment face */}
             <div className="env-face">
-              <Mandala className="face-lace face-lace--left" />
-              <Mandala className="face-lace face-lace--right" />
-
               <div className="face-text">
                 <h1 className="face-names">
-                  <span>{couple.bride}</span>
-                  <em>and</em>
-                  <span>{couple.groomShort}</span>
+                  {couple.bride} &amp; {couple.groom}
                 </h1>
-                <div className="face-rule" aria-hidden="true" />
+                <div className="face-orn" aria-hidden="true">
+                  <i>&#9670;</i>
+                </div>
+                <p className="face-hash">{couple.hashtag}</p>
                 <p className="face-date">{dateLabel.numeric}</p>
-                <p className="face-venue">{events[1].venue}</p>
               </div>
+              {/* Shadow cast by the closed flap; it fades as the flap lifts. */}
+              <div className="env-shade" aria-hidden="true" />
             </div>
 
-            {/* Folding flap */}
+            {/* Folding flap, blind-debossed with the monogram */}
             <div className="env-flap">
               <div className="env-flap-inner">
-                <Mandala className="flap-lace" />
+                <img
+                  className="flap-mono"
+                  src="/images/monogram-ko.png"
+                  alt=""
+                  aria-hidden="true"
+                />
               </div>
             </div>
 
             <span className={`env-seal ${opened ? 'is-broken' : ''}`}>
-              <span className="env-seal-inner">KO</span>
+              <img
+                className="env-seal-mono"
+                src="/images/monogram-ko-seal.png"
+                alt=""
+                aria-hidden="true"
+              />
             </span>
           </div>
         </div>
 
         <footer className="env-foot">
           <p className="env-hint">
-            {opened ? 'Welcome, come on in' : 'Tap the seal to open'}
+            {opened
+              ? 'A formal invitation, lovingly penned, will follow'
+              : 'Break the seal to open'}
           </p>
           <button type="button" className="env-skip" onClick={onOpen}>
             Skip
