@@ -18,8 +18,8 @@ export default function Story() {
             How we got here
           </h1>
           <p className="lede reveal" style={{ marginInline: 'auto' }}>
-            We asked ourselves to write it down properly, so here it is — set the
-            way we would have found it, years from now, folded in a drawer.
+            We asked ourselves to write it down properly, so here it is, the way
+            we would want it found, years from now, folded in a drawer.
           </p>
         </div>
       </section>

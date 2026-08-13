@@ -10,7 +10,7 @@ export default function BridalParty() {
           <p className="eyebrow reveal">Our People</p>
           <h1 className="reveal">The ones standing with us</h1>
           <p className="lede reveal">
-            Every one of them has carried something for us — a secret, a suitcase,
+            Every one of them has carried something for us, a secret, a suitcase,
             a phone call at an unreasonable hour. On the day, look for them in
             mocha and ivory.
           </p>

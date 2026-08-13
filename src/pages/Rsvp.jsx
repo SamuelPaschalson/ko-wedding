@@ -8,7 +8,6 @@ const EMPTY = {
   email: '',
   phone: '',
   attending: 'yes',
-  guests: '1',
   events: 'both',
   message: '',
 };
@@ -25,7 +24,8 @@ export default function Rsvp() {
       `RSVP for ${couple.bride} & ${couple.groom}`,
       `Name: ${form.name}`,
       `Attending: ${form.attending === 'yes' ? 'Yes' : 'Sadly no'}`,
-      form.attending === 'yes' ? `Guests in party: ${form.guests}` : null,
+      // One response per named guest, so the count is always exactly one seat.
+      form.attending === 'yes' ? 'Seats: 1 (this guest only)' : null,
       form.attending === 'yes' ? `Attending: ${form.events}` : null,
       form.phone ? `Phone: ${form.phone}` : null,
       form.email ? `Email: ${form.email}` : null,
@@ -48,7 +48,7 @@ export default function Rsvp() {
     if (!rsvp.endpoint) {
       const url = `https://wa.me/${rsvp.whatsapp}?text=${encodeURIComponent(asText())}`;
       window.open(url, '_blank', 'noopener');
-      setState({ tone: 'ok', text: 'Opening WhatsApp — send the message and you are counted.' });
+      setState({ tone: 'ok', text: 'Opening WhatsApp, send the message and you are counted.' });
       return;
     }
 
@@ -65,7 +65,7 @@ export default function Rsvp() {
         tone: 'ok',
         text:
           form.attending === 'yes'
-            ? 'Thank you — your seat is confirmed. See you on the 26th.'
+            ? 'Thank you, your seat is confirmed. See you on the 26th.'
             : 'Thank you for letting us know. We will miss you, and we will send photographs.',
       });
     } catch {
@@ -85,8 +85,10 @@ export default function Rsvp() {
           <p className="eyebrow reveal">RSVP</p>
           <h1 className="reveal">Say you will be there</h1>
           <p className="lede reveal">
-            Kindly respond by {rsvp.deadline}. One form per invitation is plenty —
-            whoever fills it can speak for the whole family.
+            Kindly respond by {rsvp.deadline}. This is an invitation-only
+            celebration with no plus-ones, so every guest must respond
+            individually, using their own name. If your invitation names more
+            than one person, please fill this form once for each of them.
           </p>
         </div>
         <Plate className="reveal" src={plates.rsvp} mono alt="" />
@@ -102,7 +104,7 @@ export default function Rsvp() {
         <div className="shell">
           <form className="form reveal" onSubmit={submit} noValidate>
             <div className="field">
-              <label htmlFor="rsvp-name">Full name</label>
+              <label htmlFor="rsvp-name">Your full name</label>
               <input
                 id="rsvp-name"
                 type="text"
@@ -141,21 +143,12 @@ export default function Rsvp() {
 
             {form.attending === 'yes' && (
               <>
-                <div className="field">
-                  <label htmlFor="rsvp-guests">How many of you are coming?</label>
-                  <select id="rsvp-guests" value={form.guests} onChange={set('guests')}>
-                    {['1', '2', '3', '4', '5'].map((n) => (
-                      <option key={n} value={n}>
-                        {n}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-
+                {/* No party-size field on purpose. Each response counts as one
+                    named seat, which keeps the final count exact. */}
                 <div className="field">
                   <label htmlFor="rsvp-events">Which part will you be at?</label>
                   <select id="rsvp-events" value={form.events} onChange={set('events')}>
-                    <option value="both">Both — church and reception</option>
+                    <option value="both">Both, church and reception</option>
                     <option value="church">{events[0].title} only</option>
                     <option value="reception">{events[1].title} only</option>
                   </select>
@@ -189,7 +182,7 @@ export default function Rsvp() {
               <label htmlFor="rsvp-message">A note for us</label>
               <textarea
                 id="rsvp-message"
-                placeholder="A blessing, a warning, a song request — all welcome."
+                placeholder="A blessing, a warning, a song request. All welcome."
                 value={form.message}
                 onChange={set('message')}
               />

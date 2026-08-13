@@ -1,6 +1,13 @@
 import React from 'react';
 import Plate from '../components/Plate';
-import { events, orderOfEvents, parking, plates, dateLabel } from '../data/site';
+import {
+  events,
+  orderOfEvents,
+  showOrderOfEvents,
+  parking,
+  plates,
+  dateLabel,
+} from '../data/site';
 
 export default function WeddingDay() {
   return (
@@ -10,9 +17,10 @@ export default function WeddingDay() {
           <p className="eyebrow reveal">The Wedding Day</p>
           <h1 className="reveal">One Saturday, two beginnings</h1>
           <p className="lede reveal">
-            {dateLabel.long}, {dateLabel.year}. Church in the morning, the
-            reception from the early afternoon, and the rest of the night at{' '}
-            {events[1].venue}. Everything you need is on this page.
+            {dateLabel.long}, {dateLabel.year}. We’ll say “I do” in the morning,
+            raise our glasses from the early afternoon, and dance our way into
+            forever at {events[1].venue}. Everything you need to celebrate with
+            us is right here, all that’s missing is you.
           </p>
         </div>
         <Plate className="reveal" src={plates.day} mono alt="" />
@@ -51,24 +59,29 @@ export default function WeddingDay() {
         </div>
       </section>
 
-      <section className="section">
-        <div className="shell">
-          <div style={{ textAlign: 'center', marginBottom: 'clamp(28px, 4vw, 48px)' }}>
-            <p className="eyebrow reveal">Order of events</p>
-            <h2 className="reveal" style={{ fontSize: 'clamp(30px, 5vw, 48px)', marginTop: 12 }}>
-              How the reception runs
-            </h2>
+      {/* The reception run-sheet is not final yet, so it is switched off in
+          src/data/site.js. Set `showOrderOfEvents = true` there and this whole
+          section reappears exactly as it was. */}
+      {showOrderOfEvents && (
+        <section className="section">
+          <div className="shell">
+            <div style={{ textAlign: 'center', marginBottom: 'clamp(28px, 4vw, 48px)' }}>
+              <p className="eyebrow reveal">Order of events</p>
+              <h2 className="reveal" style={{ fontSize: 'clamp(30px, 5vw, 48px)', marginTop: 12 }}>
+                How the reception runs
+              </h2>
+            </div>
+            <ol className="runsheet reveal">
+              {orderOfEvents.map((row) => (
+                <li key={row.time}>
+                  <time>{row.time}</time>
+                  <span>{row.what}</span>
+                </li>
+              ))}
+            </ol>
           </div>
-          <ol className="runsheet reveal">
-            {orderOfEvents.map((row) => (
-              <li key={row.time}>
-                <time>{row.time}</time>
-                <span>{row.what}</span>
-              </li>
-            ))}
-          </ol>
-        </div>
-      </section>
+        </section>
+      )}
 
       <section className="section section--espresso">
         <div className="shell grid-2">

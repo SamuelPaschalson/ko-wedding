@@ -11,12 +11,15 @@ export default function GuestGuide() {
           <h1 className="reveal">Everything else you might ask</h1>
           <p className="lede reveal">{travel.intro}</p>
         </div>
-        <Plate
-          className="reveal plate--wide"
-          src={plates.guide}
-          alt="Queens Park Events Centre, Victoria Island"
-          label="Venue photograph"
-        />
+        {/* The venue photograph has been replaced by a picture of the couple.
+            Set plates.guide in src/data/site.js to swap it. */}
+        {plates.guide && (
+          <Plate
+            className="reveal plate--wide"
+            src={plates.guide}
+            alt="Nkiruka and Ositadinma"
+          />
+        )}
       </section>
 
       <section className="section section--ivory" id="travel">
@@ -58,7 +61,7 @@ export default function GuestGuide() {
             Who to call
           </h2>
           <p className="reveal" style={{ color: 'var(--taupe)', marginBottom: 20 }}>
-            Please save these before the day — on the morning itself, phones get
+            Please save these before the day. On the morning itself, phones get
             very busy.
           </p>
           {contacts.map((c) => (

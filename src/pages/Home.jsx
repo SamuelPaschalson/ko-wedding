@@ -25,7 +25,10 @@ export default function Home() {
         )}
 
         <div className="hero-inner">
-          <p className="hero-pre">Together with their families</p>
+          <p className="hero-pre">
+            Together with their families, {couple.bride} &amp; {couple.groom}{' '}
+            invite you to share in the joy,
+          </p>
           <h1 className="hero-names">
             {couple.bride}
             <span className="amp">&amp;</span>
@@ -63,6 +66,8 @@ export default function Home() {
       </section>
 
       <section className="section">
+        {/* Ceremony and reception sit side by side on desktop, and stack only
+            when the screen is too narrow for two columns. */}
         <div className="shell grid-2">
           {events.map((e) => (
             <article className="card reveal" key={e.id}>
@@ -120,9 +125,6 @@ export default function Home() {
             ))}
           </div>
 
-          <div className="dress-note reveal">
-            <p>{palette.note}</p>
-          </div>
         </div>
       </section>
 

@@ -25,8 +25,8 @@ export const couple = {
 export const weddingDate = '2026-09-26T14:00:00+01:00';
 
 export const dateLabel = {
-  long: 'Saturday, the Twenty-Sixth of September',
-  year: 'Two Thousand and Twenty-Six',
+  long: 'Saturday, the Twenty Sixth of September',
+  year: 'Two Thousand and Twenty Six',
   numeric: '26 . 09 . 26',
   short: '26 September 2026',
   city: 'Victoria Island, Lagos',
@@ -45,7 +45,7 @@ export const events = [
     doors: 'Doors open 9:45 AM',
     venue: 'St. Charles Borromeo Catholic Church',
     address: '1004 Estate, Victoria Island, Lagos',
-    dress: 'Formal — champagne tones and shades of brown',
+    dress: 'Formal. Champagne tones and shades of brown',
     note: 'Seating closes at 10:20 AM. Please come early; the procession begins on time.',
     map: 'https://www.google.com/maps/search/?api=1&query=St+Charles+Borromeo+Catholic+Church+1004+Estate+Victoria+Island+Lagos',
   },
@@ -53,7 +53,7 @@ export const events = [
     id: 'reception',
     label: 'The Celebration',
     title: 'White Wedding Reception',
-    time: '2:00 PM — till late',
+    time: '2:00 PM till late',
     doors: 'Guest arrival from 1:00 PM',
     venue: 'Queens Park Event Center',
     address:
@@ -64,12 +64,19 @@ export const events = [
   },
 ];
 
+/**
+ * TOGGLE: the reception run-sheet is not final yet, so the whole "Order of
+ * events" section is hidden. Flip this to `true` and it comes straight back on
+ * the Wedding Day page, using the list below. Nothing else needs to change.
+ */
+export const showOrderOfEvents = false;
+
 export const orderOfEvents = [
   {
     time: '1:00 PM',
-    what: 'Guests arrive · welcome cocktails · voice notes for the couple',
+    what: 'Guests arrive, welcome cocktails, voice notes for the couple',
   },
-  { time: '2:00 PM', what: 'Doors open · guests seated' },
+  { time: '2:00 PM', what: 'Doors open, guests seated' },
   { time: '2:30 PM', what: 'Grand entrance of Mr & Mrs Nwana' },
   { time: '2:45 PM', what: 'Opening prayer and welcome' },
   { time: '3:00 PM', what: 'Lunch is served' },
@@ -119,9 +126,7 @@ export const palette = {
   // Short version, shown right under the hero. Adults-only is the part
   // guests most need to see before they start planning.
   shortNote:
-    'This is an adults-only celebration, and access is strictly by invitation. Formal dress, please \u2014 kindly avoid white, bright colours and denim.',
-  // The old "asoebi footer" note, condensed onto the landing page.
-  note: 'This is an adults-only celebration, and venue access is strictly by invitation. Formal dress, please — and kindly avoid white, bright colours and denim.',
+    'This is an adults-only celebration, and access is strictly by invitation. Formal dress, please. Kindly avoid white, bright colours and denim.',
 };
 
 /* ---------------------------------------------------------- */
@@ -142,14 +147,12 @@ export const bridalParty = [
   },
   {
     group: 'Standing with the groom',
+    // First names only, in the order the groom asked for. Each man keeps the
+    // photograph he already had, so the faces still match the names.
     people: [
-      {
-        name: 'Scott Umejiaku',
-        role: 'Groomsman',
-        photo: '/images/gal-01.jpg',
-      },
-      { name: 'Azeez Kamali', role: 'Groomsman', photo: '/images/gal-02.jpg' },
-      { name: 'Olisa Egbuonu', role: 'Groomsman', photo: '/images/gal-03.jpg' },
+      { name: 'Olisa', role: 'Groomsman', photo: '/images/gal-01.jpg' },
+      { name: 'Scott', role: 'Groomsman', photo: '/images/gal-02.jpg' },
+      { name: 'Kamali', role: 'Groomsman', photo: '/images/gal-03.jpg' },
       { name: 'Ugonna', role: 'Groomsman', photo: '/images/ugonna.jpg' },
     ],
   },
@@ -167,19 +170,19 @@ export const story = {
   dateline: 'Saturday, 26 September 2026',
   headline: 'She Went to Check a Box. She Is Leaving with a Husband.',
   standfirst:
-    'It began on the 20th of April, 2025 — an ordinary Easter Sunday, a game of charades, and a man who was, frankly, showing off. Sixteen months later Nkiruka and Ositadinma marry in Victoria Island.',
+    'It began on the 20th of April, 2025, an ordinary Easter Sunday, a game of charades, and a man who was, frankly, showing off.',
   columns: [
     {
       kicker: 'How they met',
-      body: `I met Osita on the 20th of April, 2025. It was one of those really ordinary days; I had just gone to fulfil all righteousness. My friend Kido had told me about a guy she felt I was going to like, and by coincidence I had sworn off dating and wasn\u2019t even looking for anything serious. Kido basically threatened me — I had to come to her Easter Sunday party, and if I didn\u2019t, she was going to stop talking to me (eyes rolling). So I went to check off a box and go home.
+      body: `I met Osita on the 20th of April, 2025. It was one of those really ordinary days; I had just gone to fulfil all righteousness. My friend Kido had told me about a guy she felt I was going to like, and by coincidence I had sworn off dating and wasn\u2019t even looking for anything serious. Kido basically threatened me, I had to come to her Easter Sunday party, and if I didn\u2019t, she was going to stop talking to me (eyes rolling). So I went to check off a box and go home.
 
 My first impression of him was that he was a show-off. They were playing charades at Kido\u2019s, and he had his hand in his pocket, casually using the right, intelligent words to describe the words on his card without breaking a sweat. He ended up with the highest points, but I was definitely still not interested. Ope, who was also in on it, was sitting beside me, and I threatened her not to get up, because I was sure he was going to come and start talking to me.
 
-Anyway, when I stood up to leave, he finally came over to start a conversation. We exchanged numbers \u2014 please remember I only did that out of peer pressure.`,
+Anyway, when I stood up to leave, he finally came over to start a conversation. We exchanged numbers, please remember I only did that out of peer pressure.`,
     },
     {
       kicker: 'The months between',
-      body: `Talking to Osita after that day was so easy, and I never doubted my place in his life or what his intentions were. It was also a coincidence that his twin sister and I share the same first name \u2014 maybe that helped too, I can\u2019t deny it.
+      body: `Talking to Osita after that day was so easy, and I never doubted my place in his life or what his intentions were. It was also a coincidence that his twin sister and I share the same first name, maybe that helped too, I can\u2019t deny it.
 
 He ticks every box of what I\u2019ve always wanted. I honestly can\u2019t wait to be married to him.`,
     },
@@ -187,7 +190,7 @@ He ticks every box of what I\u2019ve always wanted. I honestly can\u2019t wait t
   pullquote:
     'I went to check off a box and go home. Reader, I did not go home the same.',
   captions: {
-    lead: 'From the pre-wedding shoot — sixteen months in the making.',
+    lead: 'From the pre-wedding shoot, sixteen months in the making.',
     small: 'At home in Lagos, counting down to the day.',
   },
 };
@@ -281,7 +284,7 @@ export const travel = {
   tips: [
     {
       title: 'Coming from outside Nigeria',
-      body: 'Fly into Murtala Muhammed International (LOS). Nigeria is visa-on-arrival for some passports and pre-approval for others — check your embassy early, not in September. Bring your yellow fever card.',
+      body: 'Fly into Murtala Muhammed International (LOS). Nigeria is visa-on-arrival for some passports and pre-approval for others, check your embassy early, not in September. Bring your yellow fever card.',
     },
     {
       title: 'Getting to the venue',
@@ -289,7 +292,7 @@ export const travel = {
     },
     {
       title: 'Small practical things',
-      body: 'Bring a light wrap for the air conditioning, and save the RSVP numbers on this page before you set out. Remember: adults only, and access is strictly by invitation.',
+      body: 'Bring a light wrap for the air conditioning, and save the RSVP numbers on this page before you set out. Remember: adults only, no plus-ones, and access is strictly by invitation.',
     },
   ],
 };
@@ -297,23 +300,23 @@ export const travel = {
 export const faqs = [
   {
     q: 'What time should I actually arrive?',
-    a: 'For church, 9:45 AM — the ceremony starts at 10:30 prompt. For the reception, from 1:00 PM. We are starting on time; please help us make that true.',
+    a: 'For church, 9:45 AM. The ceremony starts at 10:30 prompt. For the reception, from 1:00 PM. We are starting on time; please help us make that true.',
   },
   {
     q: 'What is the dress code?',
-    a: 'Champagne tones and shades of brown — ivory, oat, champagne, gold, taupe, mocha, espresso. Formal. Please leave white to the bride, and leave denim at home.',
+    a: 'Champagne tones and shades of brown. Ivory, oat, champagne, gold, taupe, mocha, espresso. Formal. Please leave white to the bride, and leave denim at home.',
   },
   {
     q: 'Can I bring my children?',
-    a: 'With love — this is an adults-only celebration, so please make arrangements for the little ones and come enjoy the day.',
+    a: 'With love, this is an adults-only celebration, so please make arrangements for the little ones and come enjoy the day.',
   },
   {
     q: 'Can I bring a plus-one?',
-    a: 'Venue access is strictly by invitation, and your invitation names everyone we have space for. If it names you only, we are afraid the seating chart has spoken.',
+    a: 'There are no plus-ones. Access is strictly by invitation, and we cater for named guests only, so please do not bring anyone who was not invited. They will not be seated.',
   },
   {
     q: 'Is there parking?',
-    a: 'Yes — the parking space is enough for everybody, so drive in to park. Secure on-site parking with attendants from 12:30 PM, plus a driver waiting bay.',
+    a: 'Yes, the parking space is enough for everybody, so drive in to park. Secure on-site parking with attendants from 12:30 PM, plus a driver waiting bay.',
   },
   {
     q: 'Can I take photos?',
@@ -325,7 +328,7 @@ export const faqs = [
   },
   {
     q: 'When must I RSVP by?',
-    a: 'Kindly respond by 30 August 2026 so we can confirm your seat and your plate.',
+    a: 'Kindly respond by 30 August 2026 so we can confirm your seat and your plate. Every single guest must RSVP separately, in their own name. One response is one seat, so if your invitation names two of you, please send two responses.',
   },
 ];
 
@@ -363,16 +366,19 @@ export const rsvp = {
 export const plates = {
   // Home hero. `home` is a wide crop for desktop; `homeMobile` is the full
   // 4:5 frame so nothing is cropped off the couple on a phone.
-  home: '/images/hero.jpg',
-  homeMobile: '/images/hero-mobile.jpg',
+  // Both now use the bright white-background frames from the shoot, so the
+  // names and dates read far more clearly over the top.
+  home: '/images/hero-light.jpg',
+  homeMobile: '/images/hero-light-mobile.jpg',
 
-  story: '/images/story-lead.jpg',
+  story: '/images/pre-09.jpg',
   storySmall: '/images/story-small.jpg',
   // Page-header plates — frames from the couple's pre-wedding shoot.
-  day: '/images/day.jpg',
-  party: '/images/party.jpg',
+  day: '/images/pre-12.jpg',
+  party: '/images/pre-14.jpg',
   rsvp: '/images/rsvp.jpg',
   gifts: '/images/gifts.jpg',
-  // Guest Guide uses the venue photograph (Queens Park Events Centre).
-  guide: '/images/location.jpg',
+  // Guest Guide header. The Queens Park venue photograph is gone; this slot now
+  // reuses the original home landing background, a couple portrait.
+  guide: '/images/hero.jpg',
 };

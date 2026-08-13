@@ -84,7 +84,7 @@ export default function Envelope({ onOpen }) {
 
         <footer className="env-foot">
           <p className="env-hint">
-            {opened ? 'Welcome — come on in' : 'Tap the seal to open'}
+            {opened ? 'Welcome, come on in' : 'Tap the seal to open'}
           </p>
           <button type="button" className="env-skip" onClick={onOpen}>
             Skip
