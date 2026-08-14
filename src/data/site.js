@@ -384,6 +384,17 @@ export const rsvpForm = {
     // The form is set to record the respondent's address.
     respondentEmail: 'emailAddress',
   },
+  /*
+    Sending the special 'emailAddress' parameter makes Google treat the post as
+    a VERIFIED email submission, which requires a signed-in Google account and
+    answers 401 Unauthorized to anonymous posts from this site.
+
+    The guest's address is already captured by the ordinary 'Email Address'
+    question (entry.1275981927), so this stays off. Only switch it on if the
+    form's email collection is set to 'Responder input' and you have tested a
+    real submission end to end.
+  */
+  sendRespondentEmail: false,
   attendingOptions: {
     yes: "Yes, I'll be there",
     no: "Sorry, can't make it",

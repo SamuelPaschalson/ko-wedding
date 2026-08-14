@@ -63,7 +63,9 @@ export default function Rsvp() {
       [f.email]: email,
       [f.phone]: form.phone.trim(),
       [f.comments]: comments,
-      [f.respondentEmail]: email,
+      // Off by default: the verified-email parameter makes Google demand a
+      // signed-in account and reject anonymous posts with 401.
+      ...(rsvpForm.sendRespondentEmail ? { [f.respondentEmail]: email } : null),
       fvv: '1',
       pageHistory: '0',
     };
