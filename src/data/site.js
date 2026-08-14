@@ -353,10 +353,54 @@ export const contacts = [
 
 export const rsvp = {
   deadline: '30 August 2026',
-  // Paste a Formspree / Getform / Google Apps Script endpoint here.
-  // Leave empty and the form falls back to a pre-filled WhatsApp message.
+  // Legacy generic endpoint. Left empty on purpose: the RSVP page now posts
+  // straight into the couple's Google Form (see rsvpForm below).
   endpoint: '',
-  whatsapp: '2348140319163', // Chidubem — country code, no plus sign
+  whatsapp: '2348140319163', // Chidubem, country code, no plus sign
+};
+
+/* ----------------------------------------------------------
+   THE GOOGLE FORM BEHIND THE RSVP PAGE
+
+   Responses from the site land in the same spreadsheet as responses from
+   the shared forms.gle link, so there is only ever one guest list.
+
+   The entry IDs come from the form's own prefill markup. The option
+   strings below are copied CHARACTER FOR CHARACTER from the live form,
+   including the odd spacing in 'Grooms Colleagues ( Coralpay Nig Ltd)'.
+   Google silently discards a dropdown answer it does not recognise, so
+   do not tidy this punctuation up.
+   ---------------------------------------------------------- */
+export const rsvpForm = {
+  action:
+    'https://docs.google.com/forms/d/e/1FAIpQLSd2GAru-FGqRhJanLTfWnaLfS_l2yhWzD_gni8UPA93xjYqNQ/formResponse',
+  fields: {
+    attending: 'entry.877086558',
+    guestOf: 'entry.52031101',
+    name: 'entry.1757151896',
+    email: 'entry.1275981927',
+    phone: 'entry.1653168447',
+    comments: 'entry.2606285',
+    // The form is set to record the respondent's address.
+    respondentEmail: 'emailAddress',
+  },
+  attendingOptions: {
+    yes: "Yes, I'll be there",
+    no: "Sorry, can't make it",
+  },
+  guestOfOptions: [
+    'Grooms family',
+    'Brides family',
+    "Bride's Friends",
+    "Groom's Friends",
+    'Bridesmaids',
+    'Groomsmen',
+    "Bride's Family Friends",
+    "Groom's Family Friends",
+    "Bride's Colleagues (MTN Nigeria)",
+    'Grooms Colleagues ( Coralpay Nig Ltd)',
+    'GTBank Colleagues',
+  ],
 };
 
 /* ---------------------------------------------------------- */

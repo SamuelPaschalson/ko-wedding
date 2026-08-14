@@ -1,16 +1,76 @@
 import React, { useState } from 'react';
 import Plate from '../components/Plate';
 import Countdown from '../components/Countdown';
-import { rsvp, plates, couple, events } from '../data/site';
+import { rsvp, rsvpForm, plates, couple, events } from '../data/site';
 
 const EMPTY = {
   name: '',
   email: '',
   phone: '',
   attending: 'yes',
+  guestOf: '',
   events: 'both',
   message: '',
 };
+
+const EVENT_LABELS = {
+  both: 'Both, church and reception',
+  church: `${events[0].title} only`,
+  reception: `${events[1].title} only`,
+};
+
+/*
+  WHY a hidden iframe instead of fetch():
+  Google Forms does not send CORS headers, so a normal fetch cannot read the
+  reply and a no-cors fetch cannot tell success from failure. Posting a real
+  form into a hidden iframe is the one approach that both delivers the answer
+  and gives us a load event to react to.
+*/
+function postToGoogleForm(payload) {
+  return new Promise((resolve) => {
+    const frameName = 'rsvp-sink';
+
+    let frame = document.querySelector(`iframe[name="${frameName}"]`);
+    if (!frame) {
+      frame = document.createElement('iframe');
+      frame.name = frameName;
+      frame.setAttribute('aria-hidden', 'true');
+      frame.style.display = 'none';
+      document.body.appendChild(frame);
+    }
+
+    const el = document.createElement('form');
+    el.action = rsvpForm.action;
+    el.method = 'POST';
+    el.target = frameName;
+    el.style.display = 'none';
+
+    Object.entries(payload).forEach(([name, value]) => {
+      const input = document.createElement('input');
+      input.type = 'hidden';
+      input.name = name;
+      input.value = value;
+      el.appendChild(input);
+    });
+
+    document.body.appendChild(el);
+
+    let settled = false;
+    const finish = () => {
+      if (settled) return;
+      settled = true;
+      el.remove();
+      resolve();
+    };
+
+    frame.addEventListener('load', finish, { once: true });
+    // Belt and braces: the frame is cross-origin, so if the load event is ever
+    // swallowed we still release the button rather than spin forever.
+    setTimeout(finish, 2500);
+
+    el.submit();
+  });
+}
 
 export default function Rsvp() {
   const [form, setForm] = useState(EMPTY);
@@ -26,13 +86,40 @@ export default function Rsvp() {
       `Attending: ${form.attending === 'yes' ? 'Yes' : 'Sadly no'}`,
       // One response per named guest, so the count is always exactly one seat.
       form.attending === 'yes' ? 'Seats: 1 (this guest only)' : null,
-      form.attending === 'yes' ? `Attending: ${form.events}` : null,
+      form.attending === 'yes' ? `At: ${EVENT_LABELS[form.events]}` : null,
+      form.guestOf ? `Guest of: ${form.guestOf}` : null,
       form.phone ? `Phone: ${form.phone}` : null,
       form.email ? `Email: ${form.email}` : null,
       form.message ? `Message: ${form.message}` : null,
     ]
       .filter(Boolean)
       .join('\n');
+
+  const buildPayload = () => {
+    const f = rsvpForm.fields;
+    const email = form.email.trim();
+
+    // The form has no "which part" question, so that answer rides along in the
+    // comments box where the couple will actually see it.
+    const comments = [
+      form.attending === 'yes' ? `Attending: ${EVENT_LABELS[form.events]}` : null,
+      form.message.trim() || null,
+    ]
+      .filter(Boolean)
+      .join('\n');
+
+    return {
+      [f.attending]: rsvpForm.attendingOptions[form.attending],
+      [f.guestOf]: form.guestOf,
+      [f.name]: form.name.trim(),
+      [f.email]: email,
+      [f.phone]: form.phone.trim(),
+      [f.comments]: comments,
+      [f.respondentEmail]: email,
+      fvv: '1',
+      pageHistory: '0',
+    };
+  };
 
   const submit = async (e) => {
     e.preventDefault();
@@ -41,37 +128,37 @@ export default function Rsvp() {
       setState({ tone: 'error', text: 'Please add your name so we know who is coming.' });
       return;
     }
-
-    // WHY the fallback: until an endpoint is pasted into site.js, the form
-    // still works — it hands the completed RSVP to WhatsApp instead of
-    // silently doing nothing.
-    if (!rsvp.endpoint) {
-      const url = `https://wa.me/${rsvp.whatsapp}?text=${encodeURIComponent(asText())}`;
-      window.open(url, '_blank', 'noopener');
-      setState({ tone: 'ok', text: 'Opening WhatsApp, send the message and you are counted.' });
+    if (!form.email.trim()) {
+      setState({ tone: 'error', text: 'Please add your email address, the guest list is kept by name and email.' });
+      return;
+    }
+    if (!form.phone.trim()) {
+      setState({ tone: 'error', text: 'Please add a WhatsApp number so we can reach you.' });
+      return;
+    }
+    if (!form.guestOf) {
+      setState({ tone: 'error', text: 'Please tell us whose guest you are.' });
       return;
     }
 
     setSending(true);
     try {
-      const res = await fetch(rsvp.endpoint, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-        body: JSON.stringify(form),
-      });
-      if (!res.ok) throw new Error('Bad response');
+      await postToGoogleForm(buildPayload());
+      const accepted = form.attending === 'yes';
       setForm(EMPTY);
       setState({
         tone: 'ok',
-        text:
-          form.attending === 'yes'
-            ? 'Thank you, your seat is confirmed. See you on the 26th.'
-            : 'Thank you for letting us know. We will miss you, and we will send photographs.',
+        text: accepted
+          ? 'Thank you, your seat is confirmed. See you on the 26th.'
+          : 'Thank you for letting us know. We will miss you, and we will send photographs.',
       });
     } catch {
+      // Last resort, hand the completed RSVP to WhatsApp so it is never lost.
+      const url = `https://wa.me/${rsvp.whatsapp}?text=${encodeURIComponent(asText())}`;
+      window.open(url, '_blank', 'noopener');
       setState({
         tone: 'error',
-        text: 'That did not send. Please try again, or message the RSVP coordinator on the Guest Guide page.',
+        text: 'That did not send, so we have opened WhatsApp with your details. Please press send there.',
       });
     } finally {
       setSending(false);
@@ -116,7 +203,7 @@ export default function Rsvp() {
             </div>
 
             <div className="field">
-              <label id="attending-label">Will you be joining us?</label>
+              <label id="attending-label">Can you attend?</label>
               <div className="choice-row" role="radiogroup" aria-labelledby="attending-label">
                 <label className="choice">
                   <input
@@ -126,7 +213,7 @@ export default function Rsvp() {
                     checked={form.attending === 'yes'}
                     onChange={set('attending')}
                   />
-                  <span>Joyfully accepts</span>
+                  <span>Yes, I will be there</span>
                 </label>
                 <label className="choice">
                   <input
@@ -136,9 +223,21 @@ export default function Rsvp() {
                     checked={form.attending === 'no'}
                     onChange={set('attending')}
                   />
-                  <span>Regretfully declines</span>
+                  <span>Sorry, cannot make it</span>
                 </label>
               </div>
+            </div>
+
+            <div className="field">
+              <label htmlFor="rsvp-guest-of">Whose guest are you?</label>
+              <select id="rsvp-guest-of" value={form.guestOf} onChange={set('guestOf')} required>
+                <option value="">Choose</option>
+                {rsvpForm.guestOfOptions.map((option) => (
+                  <option key={option} value={option}>
+                    {option}
+                  </option>
+                ))}
+              </select>
             </div>
 
             {form.attending === 'yes' && (
@@ -148,38 +247,40 @@ export default function Rsvp() {
                 <div className="field">
                   <label htmlFor="rsvp-events">Which part will you be at?</label>
                   <select id="rsvp-events" value={form.events} onChange={set('events')}>
-                    <option value="both">Both, church and reception</option>
-                    <option value="church">{events[0].title} only</option>
-                    <option value="reception">{events[1].title} only</option>
+                    <option value="both">{EVENT_LABELS.both}</option>
+                    <option value="church">{EVENT_LABELS.church}</option>
+                    <option value="reception">{EVENT_LABELS.reception}</option>
                   </select>
                 </div>
               </>
             )}
 
             <div className="field">
-              <label htmlFor="rsvp-phone">Phone number</label>
+              <label htmlFor="rsvp-phone">WhatsApp number</label>
               <input
                 id="rsvp-phone"
                 type="tel"
                 autoComplete="tel"
                 value={form.phone}
                 onChange={set('phone')}
+                required
               />
             </div>
 
             <div className="field">
-              <label htmlFor="rsvp-email">Email (optional)</label>
+              <label htmlFor="rsvp-email">Email address</label>
               <input
                 id="rsvp-email"
                 type="email"
                 autoComplete="email"
                 value={form.email}
                 onChange={set('email')}
+                required
               />
             </div>
 
             <div className="field">
-              <label htmlFor="rsvp-message">A note for us</label>
+              <label htmlFor="rsvp-message">Comments</label>
               <textarea
                 id="rsvp-message"
                 placeholder="A blessing, a warning, a song request. All welcome."
@@ -190,7 +291,7 @@ export default function Rsvp() {
 
             <div>
               <button className="btn" type="submit" disabled={sending} style={{ marginTop: 0 }}>
-                {sending ? 'Sending…' : 'Send RSVP'}
+                {sending ? 'Sending\u2026' : 'Send RSVP'}
               </button>
             </div>
 
