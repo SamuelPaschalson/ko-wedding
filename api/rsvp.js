@@ -119,7 +119,19 @@ async function sendToGoogleForm(payload) {
     throw error;
   }
 
-  throw new Error(`Google Form replied with ${response.status}.`);
+  const detail = await response.text().catch(() => '');
+  // Google's error page usually names the actual problem (a specific required
+  // question, or an entry id that no longer exists on the form). Surface a
+  // trimmed snippet instead of just the status code so it shows up in the
+  // API response instead of having to be guessed at again.
+  const snippet = detail
+    .replace(/<[^>]+>/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim()
+    .slice(0, 300);
+  throw new Error(
+    `Google Form replied with ${response.status}.${snippet ? ` Detail: ${snippet}` : ''}`,
+  );
 }
 
 /* -------------------------------------------------------------------------- */
@@ -127,7 +139,10 @@ async function sendToGoogleForm(payload) {
 /* -------------------------------------------------------------------------- */
 
 export default async function handler(req, res) {
-  res.setHeader('Access-Control-Allow-Origin', process.env.ALLOWED_ORIGIN ?? '*');
+  res.setHeader(
+    'Access-Control-Allow-Origin',
+    process.env.ALLOWED_ORIGIN ?? '*',
+  );
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
 
@@ -143,8 +158,14 @@ export default async function handler(req, res) {
 
   const payload = parsePayload(req.body);
 
-  if (!payload.fullName || !payload.email || !EMAIL_PATTERN.test(payload.email)) {
-    res.status(400).json({ error: 'A name and a valid email address are required.' });
+  if (
+    !payload.fullName ||
+    !payload.email ||
+    !EMAIL_PATTERN.test(payload.email)
+  ) {
+    res
+      .status(400)
+      .json({ error: 'A name and a valid email address are required.' });
     return;
   }
 
