@@ -13,7 +13,6 @@
     "@fontsource/old-standard-tt": "^5.3.0",
     "@fontsource/pinyon-script": "^5.3.0",
     "@fontsource/prata": "^5.3.0",
-    "nodemailer": "^6.9.14",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },

@@ -24,7 +24,19 @@ export class HttpRsvpService {
       });
 
       if (!response.ok) {
-        throw new RsvpSubmissionError(`The RSVP service replied with ${response.status}.`);
+        const failure = await response.json().catch(() => null);
+        const error = new RsvpSubmissionError(
+          failure?.problems?.join(' ') ??
+            `The RSVP service replied with ${response.status}.`,
+        );
+        /*
+          The server could read Google's real answer. If it says the form
+          itself is refusing the response, retrying over the browser's blind
+          no-cors channel would fail in exactly the same way but be reported
+          to the guest as success. Stop instead of lying.
+        */
+        error.definitive = Boolean(failure?.definitive);
+        throw error;
       }
 
       const payload = await response.json().catch(() => null);
@@ -77,9 +89,13 @@ export class LocalStorageRsvpService {
 /**
  * Tries each service in turn and returns the first receipt.
  *
- * Used so an RSVP is never lost: the serverless endpoint is preferred
- * (Google Form row with a checked status code, plus the emails), and if it is
+ * Used so an RSVP is never lost: the serverless endpoint is preferred (it
+ * writes the Google Form row and can check the status code), and if it is
  * unavailable the browser writes straight to the Google Form instead.
+ *
+ * An error flagged `definitive` stops the chain: it means the destination
+ * rejected the response outright, so the remaining blind paths would only
+ * manufacture a false confirmation.
  */
 export class FallbackRsvpService {
   constructor(services) {
@@ -94,6 +110,7 @@ export class FallbackRsvpService {
         return await service.submit(submission);
       } catch (error) {
         lastError = error;
+        if (error?.definitive) break;
       }
     }
 
@@ -107,7 +124,7 @@ export class FallbackRsvpService {
  * Chooses the implementation from the environment. Open for extension.
  *
  * 1. `VITE_RSVP_ENDPOINT` (defaults to the bundled `/api/rsvp` function) -
- *    records the response in the Google Form and sends both emails.
+ *    records the response in the Google Form and verifies the status code.
  * 2. Direct Google Form submission - used if the endpoint is missing or down
  *    (for example on a purely static host).
  * 3. localStorage - last resort so nothing is ever silently dropped.
