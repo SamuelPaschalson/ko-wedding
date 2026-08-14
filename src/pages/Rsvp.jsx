@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import Plate from '../components/Plate';
 import Countdown from '../components/Countdown';
 import { rsvp, rsvpForm, plates, couple, events } from '../data/site';
-import { submitToGoogleForm } from '../lib/googleForm';
+import { useRsvpService } from '../features/rsvp/RsvpServiceProvider';
 
 const EMPTY = {
   name: '',
@@ -24,6 +24,7 @@ export default function Rsvp() {
   const [form, setForm] = useState(EMPTY);
   const [state, setState] = useState({ tone: '', text: '' });
   const [sending, setSending] = useState(false);
+  const service = useRsvpService();
 
   const set = (key) => (e) => setForm((f) => ({ ...f, [key]: e.target.value }));
 
@@ -43,33 +44,17 @@ export default function Rsvp() {
       .filter(Boolean)
       .join('\n');
 
-  const buildPayload = () => {
-    const f = rsvpForm.fields;
-    const email = form.email.trim();
-
-    // The form has no "which part" question, so that answer rides along in the
-    // comments box where the couple will actually see it.
-    const comments = [
-      form.attending === 'yes' ? `Attending: ${EVENT_LABELS[form.events]}` : null,
-      form.message.trim() || null,
-    ]
-      .filter(Boolean)
-      .join('\n');
-
-    return {
-      [f.attending]: rsvpForm.attendingOptions[form.attending],
-      [f.guestOf]: form.guestOf,
-      [f.name]: form.name.trim(),
-      [f.email]: email,
-      [f.phone]: form.phone.trim(),
-      [f.comments]: comments,
-      // Off by default: the verified-email parameter makes Google demand a
-      // signed-in account and reject anonymous posts with 401.
-      ...(rsvpForm.sendRespondentEmail ? { [f.respondentEmail]: email } : null),
-      fvv: '1',
-      pageHistory: '0',
-    };
-  };
+  // The UI speaks the domain shape; each service decides how to store it.
+  const toSubmission = () => ({
+    fullName: form.name.trim(),
+    email: form.email.trim(),
+    phone: form.phone.trim(),
+    attendance: form.attending === 'yes' ? 'attending' : 'declined',
+    guestOf: form.guestOf,
+    events: form.attending === 'yes' ? EVENT_LABELS[form.events] : '',
+    messageToCouple: form.message.trim(),
+    submittedAt: new Date().toISOString(),
+  });
 
   const submit = async (e) => {
     e.preventDefault();
@@ -93,7 +78,7 @@ export default function Rsvp() {
 
     setSending(true);
     try {
-      await submitToGoogleForm(buildPayload());
+      await service.submit(toSubmission());
       const accepted = form.attending === 'yes';
       setForm(EMPTY);
       setState({

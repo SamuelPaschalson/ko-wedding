@@ -13,11 +13,14 @@ import '@fontsource/old-standard-tt/700.css';
 import '@fontsource/old-standard-tt/400-italic.css';
 
 import App from './App';
+import { RsvpServiceProvider } from './features/rsvp/RsvpServiceProvider';
 import './styles/index.css';
 import './styles/envelope.css';
 
 createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <App />
+    <RsvpServiceProvider>
+      <App />
+    </RsvpServiceProvider>
   </React.StrictMode>
 );
