@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import Plate from '../components/Plate';
 import Countdown from '../components/Countdown';
 import { rsvp, rsvpForm, plates, couple, events } from '../data/site';
+import { submitToGoogleForm } from '../lib/googleForm';
 
 const EMPTY = {
   name: '',
@@ -18,59 +19,6 @@ const EVENT_LABELS = {
   church: `${events[0].title} only`,
   reception: `${events[1].title} only`,
 };
-
-/*
-  WHY a hidden iframe instead of fetch():
-  Google Forms does not send CORS headers, so a normal fetch cannot read the
-  reply and a no-cors fetch cannot tell success from failure. Posting a real
-  form into a hidden iframe is the one approach that both delivers the answer
-  and gives us a load event to react to.
-*/
-function postToGoogleForm(payload) {
-  return new Promise((resolve) => {
-    const frameName = 'rsvp-sink';
-
-    let frame = document.querySelector(`iframe[name="${frameName}"]`);
-    if (!frame) {
-      frame = document.createElement('iframe');
-      frame.name = frameName;
-      frame.setAttribute('aria-hidden', 'true');
-      frame.style.display = 'none';
-      document.body.appendChild(frame);
-    }
-
-    const el = document.createElement('form');
-    el.action = rsvpForm.action;
-    el.method = 'POST';
-    el.target = frameName;
-    el.style.display = 'none';
-
-    Object.entries(payload).forEach(([name, value]) => {
-      const input = document.createElement('input');
-      input.type = 'hidden';
-      input.name = name;
-      input.value = value;
-      el.appendChild(input);
-    });
-
-    document.body.appendChild(el);
-
-    let settled = false;
-    const finish = () => {
-      if (settled) return;
-      settled = true;
-      el.remove();
-      resolve();
-    };
-
-    frame.addEventListener('load', finish, { once: true });
-    // Belt and braces: the frame is cross-origin, so if the load event is ever
-    // swallowed we still release the button rather than spin forever.
-    setTimeout(finish, 2500);
-
-    el.submit();
-  });
-}
 
 export default function Rsvp() {
   const [form, setForm] = useState(EMPTY);
@@ -143,7 +91,7 @@ export default function Rsvp() {
 
     setSending(true);
     try {
-      await postToGoogleForm(buildPayload());
+      await submitToGoogleForm(buildPayload());
       const accepted = form.attending === 'yes';
       setForm(EMPTY);
       setState({
