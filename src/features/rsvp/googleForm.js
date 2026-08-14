@@ -18,9 +18,15 @@ export function buildGoogleFormBody(submission) {
   const f = GOOGLE_FORM_ENTRIES;
   const body = new URLSearchParams();
 
+  // If the form's "WhatsApp number" question has Google's built-in Number
+  // response validation turned on, a leading '+' fails it and the whole
+  // submission gets rejected with a 400 that names no specific field. Send
+  // digits only so that validation (if present) can't trip on it.
+  const digitsOnlyPhone = (submission.phone ?? '').replace(/[^\d]/g, '');
+
   body.set(f.name, submission.fullName);
   body.set(f.email, submission.email);
-  body.set(f.phone, submission.phone);
+  body.set(f.phone, digitsOnlyPhone);
   body.set(
     f.attending,
     submission.attendance === 'attending'

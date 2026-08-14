@@ -81,10 +81,16 @@ async function sendToGoogleForm(payload) {
     .filter(Boolean)
     .join('\n');
 
+  // If the form's "WhatsApp number" question has Google's built-in Number
+  // response validation turned on, a leading '+' fails it and the whole
+  // submission gets rejected with a 400 that names no specific field. Send
+  // digits only so that validation (if present) can't trip on it.
+  const digitsOnlyPhone = (payload.phone ?? '').replace(/[^\d]/g, '');
+
   const body = new URLSearchParams();
   body.set(GOOGLE_FORM_ENTRIES.fullName, payload.fullName ?? '');
   body.set(GOOGLE_FORM_ENTRIES.email, payload.email ?? '');
-  body.set(GOOGLE_FORM_ENTRIES.phone, payload.phone ?? '');
+  body.set(GOOGLE_FORM_ENTRIES.phone, digitsOnlyPhone);
   body.set(
     GOOGLE_FORM_ENTRIES.attending,
     attending ? ATTENDING_OPTIONS.attending : ATTENDING_OPTIONS.declined,
