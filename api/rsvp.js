@@ -32,7 +32,7 @@ const GOOGLE_FORM_ENTRIES = {
 /* Copied character for character from the live form. Google silently discards
    a value it does not recognise, so do not tidy the spacing. */
 const ATTENDING_OPTIONS = {
-  attending: "Yes, I'll be there",
+  attending: "Yes,  I'll be there",
   declined: "Sorry, can't make it",
 };
 

@@ -396,7 +396,7 @@ export const rsvpForm = {
   */
   sendRespondentEmail: false,
   attendingOptions: {
-    yes: "Yes, I'll be there",
+    yes: "Yes,  I'll be there",
     no: "Sorry, can't make it",
   },
   guestOfOptions: [
