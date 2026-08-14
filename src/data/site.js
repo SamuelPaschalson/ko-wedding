@@ -372,7 +372,7 @@ export const plates = {
   homeMobile: '/images/hero-light-mobile.jpg',
 
   story: '/images/pre-09.jpg',
-  storySmall: '/images/story-small.jpg',
+  storySmall: '/images/story-lead.jpg',
   // Page-header plates — frames from the couple's pre-wedding shoot.
   day: '/images/pre-12.jpg',
   party: '/images/pre-14.jpg',
